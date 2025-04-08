@@ -1,5 +1,8 @@
+from typing import List
+from Exercise_Class import *
+
 class Workout:
-    def __init__(self, name: str, duration: float, calories_burned: float, exercises: dict):
+    def __init__(self, name: str, duration: float, calories_burned: float, exercises: List[Exercise]):
         self.name = name
         self.duration = duration
         self.calories_burned = calories_burned
@@ -21,5 +24,5 @@ class Workout:
 
 
 #Testing Code
-my_workout = Workout("Chest day", 1.59, 450, {"Benchpress": 5, "Chest Fly": 3, "Incline DB Bench": 2, "Pushups": 3})
+my_workout = Workout("Chest day", 1.59, 450, [benchpress, Chest_fly])
 print(my_workout)
