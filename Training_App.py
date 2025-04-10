@@ -1,4 +1,5 @@
 import sys
+from Athlete_Class import Athlete
 #Once the name of files is fixed import the classes
 def display_menu():
     print("\n--- Personalized Sports Training App ---")
