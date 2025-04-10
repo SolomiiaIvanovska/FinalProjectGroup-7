@@ -1,6 +1,8 @@
 import sys
 from Athlete_Class import Athlete
-#Once the name of files is fixed import the classes
+from Exercise_Class import Exercise
+from Workout_Class import Workout
+
 def display_menu():
     print("\n--- Personalized Sports Training App ---")
     print("1. Create an Athlete Profile")
