@@ -1,3 +1,6 @@
+from http.client import IncompleteRead
+
+
 class Athlete:
     def __init__(self, input_tuple):
         self.name = input_tuple[0]
@@ -51,16 +54,25 @@ def readData(file_path)->tuple:
     file = open(file_path)
     info = file.read()
     value = info.split(",")
-    name = value[0]
-    sport = value[1]
-    age = value[2]
-    skill_level = value[3]
-    workouts = value[4]
-    performance_log = value[5]
-    goals = value[6]
-    return name, sport, age, skill_level, workouts, performance_log, goals
+    if(len(value) == 7):
+        name = value[0]
+        sport = value[1]
+        age = int(value[2])
+        skill_level = value[3]
+        workouts = value[4]
+        performance_log = value[5]
+        if value[6] == "Upper Body" or value[6] == "upperbody" or value[6] == "Upperbody" or value[6] == " Upperbody":
+            goals = True
+        else:
+            goals = False
+        return name, sport, age, skill_level, workouts, performance_log, goals
+
+    else:
+        print("Input is missing arguments, please fix file and try again")
+        raise IncompleteRead
 
 Big_Connor = Athlete(readData("C:\\Users\\Miles\\PycharmProjects\\Final MAD2502 project\\Test Athlete.txt"))
-print(Big_Connor.workout_performance_dict())
+
+
 
 
