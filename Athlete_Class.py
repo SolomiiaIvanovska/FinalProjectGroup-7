@@ -1,12 +1,12 @@
 class Athlete:
-    def __init__(self, name = "", sport = "", age = 0, skill_level = "", workouts = [], performance_log = [], goals = ""):
-        self.name = name
-        self.sport = sport
-        self.age = age
-        self.skill_level = skill_level
-        self.workouts = workouts
-        self.performance = performance_log
-        self.goals = goals
+    def __init__(self, input_tuple):
+        self.name = input_tuple[0]
+        self.sport = input_tuple[1]
+        self.age = input_tuple[2]
+        self.skill_level = input_tuple[3]
+        self.workouts = input_tuple[4].split(" ")
+        self.performance = input_tuple[5].split(" ")
+        self.goals = input_tuple[6]
 
     def get_name(self):
         return self.name
@@ -47,10 +47,20 @@ class Athlete:
         for key, val in workout_performance_dict:
             print(f"Performance feeling: {key.upper()}, Workout Done: {val.upper()}")
 
+def readData(file_path)->tuple:
+    file = open(file_path)
+    info = file.read()
+    value = info.split(",")
+    name = value[0]
+    sport = value[1]
+    age = value[2]
+    skill_level = value[3]
+    workouts = value[4]
+    performance_log = value[5]
+    goals = value[6]
+    return name, sport, age, skill_level, workouts, performance_log, goals
 
+Big_Connor = Athlete(readData("C:\\Users\\Miles\\PycharmProjects\\Final MAD2502 project\\Test Athlete.txt"))
+print(Big_Connor.workout_performance_dict())
 
-tester = Athlete("COnnor", "is", workouts=["hello", "I", "am", "testing"], performance_log=["good", "bad", "sad", "mad"])
-#tester2 = Athlete(performance_log=["good", "bad", "sad", "mad"])
-print(tester.workout_performance_dict())
-print(tester.get_all())
 
