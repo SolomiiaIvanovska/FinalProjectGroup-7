@@ -1,0 +1,27 @@
+
+big_true = True
+
+while big_true:
+    print("Welcome to the Athlete Fitness Calculator!")
+    print("Options are presented below")
+    print("1. Test While loop")
+    print("2. Exit Loop")
+
+    while True:
+        choice = input("Which option would you like to choose ")
+        print("\n")
+        try:
+            choice = int(choice)
+        except ValueError:
+            print("Did not enter a number with no decimals! Try again")
+            print("\n")
+            break
+
+        if(choice == 1):
+            print("hello")
+            print("\n")
+            break
+        if (choice == 2):
+            print("Thank you for using the program!")
+            big_true = False
+            break
