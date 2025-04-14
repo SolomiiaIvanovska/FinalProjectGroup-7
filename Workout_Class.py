@@ -154,3 +154,4 @@ my_workout.remove_exercise(pushups)
 # Rate workout
 my_workout.rate_workout("Easy")
 my_workout.display_summary()
+#

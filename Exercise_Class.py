@@ -37,3 +37,4 @@ Chest_fly = Exercise("Chest Fly", 2, [10, 10], [180, 180])
 
 #print(benchpress)
 #print(Chest_fly)
+#
