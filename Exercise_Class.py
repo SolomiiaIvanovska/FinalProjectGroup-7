@@ -21,9 +21,19 @@ class Exercise:
     def __str__(self):
         return self.name + "\n" + str(self.sets) + " Sets\nReps each set: " + str(self.reps) + "\nWeight each set: " + str(self.weight) + "\n"
 
+    def add_set(self, reps: int, weight: int):
+        self.sets += 1
+        self.reps.append(reps)
+        self.weight.append(weight)
+
+    def remove_set(self, num_set: int):
+        self.sets -= 1
+        self.reps.pop(num_set)
+        self.weight.pop(num_set)
+
 
 benchpress = Exercise("Benchpress", 3, [8, 6, 4], [145, 165, 185])
 Chest_fly = Exercise("Chest Fly", 2, [10, 10], [180, 180])
 
-print(benchpress)
-print(Chest_fly)
+#print(benchpress)
+#print(Chest_fly)
