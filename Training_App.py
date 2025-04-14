@@ -1,110 +1,143 @@
 import sys
-from Athlete_Class import Athlete
+from Athlete_Class import Athlete #, readData
 from Exercise_Class import Exercise
 from Workout_Class import Workout
 
-def display_menu():
-    print("\n--- Personalized Sports Training App ---")
+athlete = None
+
+PREDEFINED_WORKOUTS = {
+    "Legs": {
+        "Beginner": [
+            Exercise("Bodyweight Squats", 3, [12, 12, 12], [0, 0, 0]),
+            Exercise("Glute Bridges", 3, [10, 10, 10], [0, 0, 0]),
+            Exercise("Step-ups", 2, [10, 10], [0, 0]),
+            Exercise("Wall Sit", 3, [30, 30, 30], [0, 0, 0]),  # seconds
+            Exercise("Calf Raises", 2, [15, 15], [0, 0])
+        ],
+        "Intermediate": [
+            Exercise("Goblet Squats", 3, [10, 10, 8], [30, 35, 40]),
+            Exercise("Lunges", 3, [10, 10, 10], [15, 15, 15]),
+            Exercise("Romanian Deadlifts", 3, [8, 8, 8], [40, 40, 40]),
+            Exercise("Bulgarian Split Squat", 3, [8, 8, 8], [20, 20, 20]),
+            Exercise("Calf Raises (Weighted)", 3, [15, 15, 15], [20, 20, 20])
+        ],
+        "Advanced": [
+            Exercise("Barbell Squats", 4, [6, 6, 5, 5], [135, 145, 155, 165]),
+            Exercise("Deadlifts", 3, [5, 5, 5], [185, 195, 205]),
+            Exercise("Walking Lunges", 3, [12, 12, 12], [25, 25, 25]),
+            Exercise("Jump Squats", 3, [15, 15, 15], [0, 0, 0]),
+            Exercise("Sled Push", 3, [30, 30, 30], [90, 90, 90])
+        ]
+    },
+    "Arms": {
+        "Beginner": [
+            Exercise("Bicep Curls", 2, [12, 12], [10, 10]),
+            Exercise("Tricep Dips (Bench)", 3, [10, 10, 10], [0, 0, 0]),
+            Exercise("Resistance Band Curls", 2, [15, 15], [0, 0]),
+            Exercise("Wall Push-ups", 3, [10, 10, 10], [0, 0, 0]),
+            Exercise("Overhead Extensions", 2, [12, 12], [10, 10])
+        ],
+        "Intermediate": [
+            Exercise("Dumbbell Bicep Curls", 3, [10, 10, 8], [15, 15, 15]),
+            Exercise("Skull Crushers", 3, [10, 8, 8], [20, 25, 25]),
+            Exercise("Hammer Curls", 3, [10, 10, 10], [20, 20, 20]),
+            Exercise("Overhead Triceps", 3, [10, 10, 10], [25, 25, 25]),
+            Exercise("Incline Dumbbell Curls", 3, [8, 8, 8], [15, 15, 15])
+        ],
+        "Advanced": [
+            Exercise("Barbell Curls", 4, [8, 8, 6, 6], [55, 65, 70, 75]),
+            Exercise("Weighted Dips", 3, [10, 8, 8], [25, 25, 25]),
+            Exercise("Preacher Curls", 3, [8, 8, 8], [50, 50, 50]),
+            Exercise("Close Grip Bench Press", 3, [6, 6, 6], [115, 125, 135]),
+            Exercise("Cable Triceps Extensions", 3, [10, 10, 10], [40, 45, 50])
+        ]
+    },
+    "Core": {
+        "Beginner": [
+            Exercise("Crunches", 3, [15, 15, 15], [0, 0, 0]),
+            Exercise("Leg Raises", 3, [10, 10, 10], [0, 0, 0]),
+            Exercise("Plank", 3, [30, 30, 30], [0, 0, 0]),  # seconds
+            Exercise("Seated Twists", 3, [20, 20, 20], [0, 0, 0]),
+            Exercise("Bird-Dogs", 3, [12, 12, 12], [0, 0, 0])
+        ],
+        "Intermediate": [
+            Exercise("Russian Twists", 3, [20, 20, 20], [10, 10, 10]),
+            Exercise("Plank with Shoulder Taps", 3, [20, 20, 20], [0, 0, 0]),
+            Exercise("Hanging Leg Raises", 3, [10, 10, 10], [0, 0, 0]),
+            Exercise("Cable Crunches", 3, [12, 12, 12], [40, 40, 40]),
+            Exercise("Side Plank with Reach", 3, [15, 15, 15], [0, 0, 0])
+        ],
+        "Advanced": [
+            Exercise("Weighted Sit-ups", 4, [10, 10, 10, 10], [25, 25, 25, 25]),
+            Exercise("Toes to Bar", 3, [10, 10, 10], [0, 0, 0]),
+            Exercise("Decline Russian Twists", 3, [20, 20, 20], [20, 20, 20]),
+            Exercise("Ab Rollouts", 3, [12, 12, 12], [0, 0, 0]),
+            Exercise("Dragon Flags", 3, [8, 8, 8], [0, 0, 0])
+        ]
+    }
+}
+
+#athlete = Athlete(readData("Test Athlete.txt"))
+
+
+while True:
+    print("\n--- Personalized Sports Training App Menu ---")
     print("1. Create an Athlete Profile")
-    print("2. Create a Workout")
-    print("3. Modify Workout")
-    print("4. View Workout Summary")
-    print("5. Rate Workout")
-    print("6. Exit")
-def create_athlete():
-    name = input("Enter athlete's name: ")
-    sport = input("Enter athlete's sport: ")
-    age = int(input("Enter athlete's age: "))
-    skill_level = input("Enter athlete's skill level: ")
-    athlete = Athlete(name, sport, age, skill_level)
-    return athlete
-def create_workout():
-    name = input("Enter workout name: ")
-    duration = float(input("Enter workout duration in hours: "))
-    calories_burned = float(input("Enter calories burned: "))
-    workout_type = input("Enter workout type (e.g., Strength, Cardio): ")
-    exercises = {}
+    print("2. Add Predefined Workout")
+    print("3. View Workout Summary")
+    print("4. Rate a Workout")
+    print("5. Exit")
+    choice = input("Select an option: ")
 
-    print("Enter exercises (Enter 'done' when finished):")
-    while True:
-        exercise_name = input("Exercise name: ")
-        if exercise_name.lower() == 'done':
-            break
-        sets = int(input(f"Sets for {exercise_name}: "))
-        exercises[exercise_name] = sets
-
-    workout = Workout(name, duration, calories_burned, exercises, workout_type)
-    return workout
-def modify_workout(workout):
-    print("\nWhat would you like to do?")
-    print("1. Add Exercise")
-    print("2. Remove Exercise")
-    print("3. Update Exercise Sets")
-    choice = int(input("Enter your choice: "))
     if choice == "1":
-        exercise_name = input("Enter the exercise name to add: ")
-        sets = int(input(f"Enter number of sets for {exercise_name}: "))
-        workout.add_exercise(exercise_name, sets)
+        name = input("Enter athlete's name: ")
+        sport = input("Enter sport: ")
+        age = int(input("Enter age: "))
+        skill = input("Enter skill level (Beginner/Intermediate/Advanced): ").capitalize()
+        goals_input = input("Enter goal (e.g., Upper Body): ").strip().lower()
+        goals = goals_input in ["upper body", "upperbody"]
+
+        # Create new athlete instance
+        athlete = Athlete((name, sport, age, skill, [], [], goals))
+        print(f"\nAthlete profile for {athlete.get_name()} created successfully!")
 
     elif choice == "2":
-        exercise_name = input("Enter the exercise name to remove: ")
-        workout.remove_exercise(exercise_name)
+        if not athlete:
+            print(" Please create an athlete profile first (Option 1).")
+            continue
+        category = input("Choose a category (Legs/Arms/Core): ").capitalize()
+        skill = athlete.get_skill_level().capitalize()
+        if category in PREDEFINED_WORKOUTS and skill in PREDEFINED_WORKOUTS[category]:
+            exercises = PREDEFINED_WORKOUTS[category][skill]
+            workout = Workout(f"{category} Day", 1.0, 300, {ex.name: ex for ex in exercises}, category)
+            print("\nWorkout created:")
+            print(workout)
+            athlete.add_workout(workout.name)
+        else:
+            print("Invalid category or skill level.")
 
     elif choice == "3":
-        exercise_name = input("Enter the exercise name to update: ")
-        new_sets = int(input(f"Enter the new number of sets for {exercise_name}: "))
-        workout.update_sets(exercise_name, new_sets)
-def view_workout(workout):
-    print("\nWorkout Summary:")
-    summary = workout.get_summary()
-    for key, value in summary.items():
-        print(f"{key}: {value}")
-def rate_workout(workout):
-    rating = input("Enter workout rating (e.g., Easy, Moderate, Hard): ")
-    workout.rate_workout(rating)
-def main():
-    athlete = None
-    workout = None
+        if not athlete:
+            print(" Please create an athlete profile first (Option 1).")
+            continue
+        print(f"\nName: {athlete.get_name()}")
+        print(f"Sport: {athlete.get_sport()}")
+        print(f"Age: {athlete.get_age()}")
+        print(f"Skill Level: {athlete.get_skill_level()}")
+        print("Workouts:")
+        athlete.display_workouts()
 
-    while True:
-        display_menu()
-        choice = input("Enter your choice: ")
-        if choice == '1':
-            athlete = create_athlete()
-            print("Athlete {athlete.get_name()} created successfully!.")
-        elif choice == "2":
-            if athlete is not None:
-                workout = create_workout()
-                print(f"\nWorkout  {workout.name} created successfully!")
-            else:
-                print("\nYou need to create an athlete profile first!")
-        elif choice == '3':
-            if athlete is not None:
-                modify_workout(workout)
-            else:
-                print("\nWorkout {workout.name} modified successfully!")
-        elif choice == '4':
-            if workout is not None:
-                view_workout_summary(workout)
-            else:
-                print("\nNo workout to view. Create a workout first.")
-        elif choice == '5':
-            if workout is not None:
-                rate_workout(workout)
-            else:
-                print("\nNo workout to rate. Create a workout first.")
-        elif choice == 6:
-            print("\nThank you for using the Personalized Sports Training App!")
-            sys.exit()
-        else:
-            print("\nInvalid choice. Please try again.")
-if __name__ == '__main__':
-    main()
+    elif choice == "4":
+        if not athlete:
+            print(" Please create an athlete profile first (Option 1).")
+            continue
+        rating = input("Rate your last workout (Easy, Moderate, Hard): ")
+        athlete.log_performance(rating)
+        print(f"Workout rated as: {rating}")
 
+    elif choice == "5":
+        print("Exiting app.")
+        break
 
-
-
-
-
-
-
+    else:
+        print("Invalid choice.")
