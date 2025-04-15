@@ -1,5 +1,5 @@
 import sys
-from Athlete_Class import Athlete #, readData
+from Athlete_Class import Athlete , readData
 from Exercise_Class import Exercise
 from Workout_Class import Workout
 
@@ -77,67 +77,127 @@ PREDEFINED_WORKOUTS = {
     }
 }
 
+
 #athlete = Athlete(readData("Test Athlete.txt"))
 
+def get_skill_level_input():
+    skill_map = {"1": "Beginner", "2": "Intermediate", "3": "Advanced"}
+    while True:
+        level_input = input("Enter skill level (1-Beginner, 2-Intermediate, 3-Advanced): ").strip()
+        level = skill_map.get(level_input) or level_input.capitalize()
+        if level in ["Beginner", "Intermediate", "Advanced"]:
+            return level
+        print("Invalid input. Please enter 1, 2, 3 or the skill level name.")
 
-while True:
-    print("\n--- Personalized Sports Training App Menu ---")
-    print("1. Create an Athlete Profile")
-    print("2. Add Predefined Workout")
-    print("3. View Workout Summary")
-    print("4. Rate a Workout")
-    print("5. Exit")
-    choice = input("Select an option: ")
+def create_athlete():
+    name = input("Enter athlete's name: ")
+    age = int(input("Enter athlete's age: "))
+    skill_level = get_skill_level_input()
+    goals = input("What are your goals? (Upper body/Lower body/Full body): ").strip().lower() in ["upper", "upper body", "upperbody"]
+    return Athlete((name, age, skill_level, [], [], goals))
 
-    if choice == "1":
-        name = input("Enter athlete's name: ")
-        sport = input("Enter sport: ")
-        age = int(input("Enter age: "))
-        skill = input("Enter skill level (Beginner/Intermediate/Advanced): ").capitalize()
-        goals_input = input("Enter goal (e.g., Upper Body): ").strip().lower()
-        goals = goals_input in ["upper body", "upperbody"]
+def generate_workout(skill_level, category):
+    if category not in PREDEFINED_WORKOUTS:
+        print("Workout category not available.")
+        return None
 
-        # Create new athlete instance
-        athlete = Athlete((name, sport, age, skill, [], [], goals))
-        print(f"\nAthlete profile for {athlete.get_name()} created successfully!")
+    workout_list = PREDEFINED_WORKOUTS[category].get(skill_level)
+    if not workout_list:
+        print("Skill level not found for this category.")
+        return None
 
-    elif choice == "2":
-        if not athlete:
-            print(" Please create an athlete profile first (Option 1).")
-            continue
-        category = input("Choose a category (Legs/Arms/Core): ").capitalize()
-        skill = athlete.get_skill_level().capitalize()
-        if category in PREDEFINED_WORKOUTS and skill in PREDEFINED_WORKOUTS[category]:
-            exercises = PREDEFINED_WORKOUTS[category][skill]
-            workout = Workout(f"{category} Day", 1.0, 300, {ex.name: ex for ex in exercises}, category)
-            print("\nWorkout created:")
-            print(workout)
-            athlete.add_workout(workout.name)
+    workout_name = f"{skill_level} {category} Workout"
+    total_duration = round(len(workout_list) * 0.2, 2)
+    calories = round(len(workout_list) * 40, 2)
+    workout = Workout(workout_name, total_duration, calories,
+                      {ex.get_name(): ex for ex in workout_list}, category)
+    return workout
+
+def main():
+    athletes = []
+    workouts = []
+
+    while True:
+        print("\n--- Personalized Sports Training App Menu ---")
+        print("1. Create an Athlete Profile")
+        print("2. Add Predefined Workout")
+        print("3. View Workout Summary")
+        print("4.View All Athletes")
+        print("5. Save and Exit")
+
+        choice = input("Select an option: ")
+
+        if choice == "1":
+            athlete = create_athlete()
+            athletes.append(athlete)
+            print(f"Athlete {athlete.get_name()} created successfully!")
+
+
+        elif choice == "2":
+            if not athletes:
+                print("Please create an athlete profile first.")
+                continue
+            print("Choose an athlete to assign a workout:")
+            for idx, a in enumerate(athletes):
+                print(f"{idx + 1}. {a.get_name()}")
+            try:
+                selection = int(input("Enter athlete number: ")) - 1
+                athlete = athletes[selection]
+            except (ValueError, IndexError):
+                print("Invalid selection.")
+                continue
+            category = input("Choose workout category (Legs/Arms/Core): ").capitalize()
+            workout = generate_workout(athlete.get_skill_level(), category)
+            if workout:
+                workouts.append(workout)
+                athlete.add_workout(workout.name)
+                print(f"'{workout.name}' added for {athlete.get_name()}.")
+
+
+        elif choice == "3":
+            if not athletes:
+                print("No athletes created yet.")
+                continue
+            print("Choose an athlete to view their workout summary:")
+            for idx, a in enumerate(athletes):
+                print(f"{idx + 1}. {a.get_name()}")
+            try:
+                selection = int(input("Enter athlete number: ")) - 1
+                athlete = athletes[selection]
+            except (ValueError, IndexError):
+                print("Invalid selection.")
+                continue
+            if not athlete.get_workouts():
+                print(f"{athlete.get_name()} has no workouts yet.")
+            else:
+                print(f"\nWorkout Summary for {athlete.get_name()}:")
+                for workout_name in athlete.get_workouts():
+                    for workout in workouts:
+                        if workout.name == workout_name:
+                            print(workout)
+
+        elif choice == "4":
+            if not athletes:
+                print("No athletes created yet.")
+                continue
+            for athlete in athletes:
+                print(athlete.get_all())
+
+
+        elif choice == "5":
+            print("Saving progress and exiting...")
+            break
+
         else:
-            print("Invalid category or skill level.")
+            print("Invalid option. Please try again.")
+if __name__ == "__main__":
+        main()
 
-    elif choice == "3":
-        if not athlete:
-            print(" Please create an athlete profile first (Option 1).")
-            continue
-        print(f"\nName: {athlete.get_name()}")
-        print(f"Sport: {athlete.get_sport()}")
-        print(f"Age: {athlete.get_age()}")
-        print(f"Skill Level: {athlete.get_skill_level()}")
-        print("Workouts:")
-        athlete.display_workouts()
 
-    elif choice == "4":
-        if not athlete:
-            print(" Please create an athlete profile first (Option 1).")
-            continue
-        rating = input("Rate your last workout (Easy, Moderate, Hard): ")
-        athlete.log_performance(rating)
-        print(f"Workout rated as: {rating}")
 
-    elif choice == "5":
-        print("Exiting app.")
-        break
 
-    else:
-        print("Invalid choice.")
+
+
+
+
+
