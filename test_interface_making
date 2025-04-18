@@ -7,26 +7,42 @@ main_window.withdraw()
 create_profile.withdraw()
 
 def open_Creator():
-    create_profile.geometry("800x500")
+    create_profile.geometry("535x500")
     create_profile.configure(bg="Aqua")
     main_window.withdraw()
     screen.withdraw()
     welcome_message = tk.Label(create_profile, text="Please input the following information", font=('Arial', 25))
     welcome_message.grid(row=0, column=0, columnspan=200,rowspan=50, pady=20)
-    
+
 
 
     name_message = tk.Label(create_profile, text="Name: ", font=('Arial', 18))
     name_message.grid()
 
-    input_message = tk.Text(create_profile, height=1, width=30, font=('Arial', 15))
-    input_message.grid()
+    name_input = tk.Text(create_profile, height=1, width=30, font=('Arial', 15))
+    name_input.grid()
 
-    name_message = tk.Label(create_profile, text="Age: ", font=('Arial', 18))
-    name_message.grid()
+    age_message = tk.Label(create_profile, text="Age: ", font=('Arial', 18))
+    age_message.grid()
 
-    input_message = tk.Text(create_profile, height=1, width=30, font=('Arial', 15))
-    input_message.grid()
+    age_input = tk.Text(create_profile, height=1, width=30, font=('Arial', 15))
+    age_input.grid()
+
+    skill_message = tk.Label(create_profile, text="Enter skill level: ", font=('Arial', 18))
+    skill_message.grid()
+
+    skill_input = tk.Text(create_profile, height=1, width=30, font=('Arial', 15))
+    skill_input.grid()
+
+    goals_message = tk.Label(create_profile, text="Goals: ", font=('Arial', 18))
+    goals_message.grid()
+
+    goals_message = tk.Text(create_profile, height=1, width=30, font=('Arial', 15))
+    goals_message.grid()
+
+    create_button = tk.Button(create_profile, height=1, width=30, text="Create Athlete!", font=('Arial', 15))
+    create_button.grid()
+
 
     create_profile.deiconify()
 
