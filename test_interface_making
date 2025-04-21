@@ -113,10 +113,12 @@ def add_preset_workout()->None:
         skill = athlete.get_skill_level()
         exercises = PREDEFINED_WORKOUTS[category.strip()][skill.strip()]
         workout = Workout(f"{category} Day", 1.0, 300, {ex.name: ex for ex in exercises}, category)
-        print("\nWorkout created:")
-        print(workout)
+        printed_workouts = tk.Label(add_workout, text=f"{workout}", font=('Arial', 18))
+        printed_workouts.grid()
         athlete.add_workout(workout.name)
-        open_main()
+        go_home = tk.Button(add_workout, text="Return to main screen", height=1, width=30, font=('Arial', 18), command=open_main)
+        go_home.grid()
+        #open_main()
 
     enter_button = tk.Button(add_workout, text="See suggested workout", width=30, height=1, font=('Arial', 18), command=fetch_workout)
     enter_button.grid()
