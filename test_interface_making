@@ -1,4 +1,5 @@
 import tkinter as tk
+from Athlete_Class import Athlete
 
 screen = tk.Tk()
 main_window = tk.Toplevel()
@@ -6,42 +7,65 @@ create_profile = tk.Toplevel()
 main_window.withdraw()
 create_profile.withdraw()
 
+
+
+
+
 def open_Creator():
-    create_profile.geometry("535x500")
+    create_profile.geometry("375x550")
     create_profile.configure(bg="Aqua")
     main_window.withdraw()
     screen.withdraw()
-    welcome_message = tk.Label(create_profile, text="Please input the following information", font=('Arial', 25))
+    welcome_message = tk.Label(create_profile, text="Please input the following information", font=('Arial', 15))
     welcome_message.grid(row=0, column=0, columnspan=200,rowspan=50, pady=20)
 
 
 
     name_message = tk.Label(create_profile, text="Name: ", font=('Arial', 18))
-    name_message.grid()
+    name_message.grid(pady=10)
 
     name_input = tk.Text(create_profile, height=1, width=30, font=('Arial', 15))
     name_input.grid()
 
+    sport_message = tk.Label(create_profile, text="Enter your sport: ", font=('Arial, 18'))
+    sport_message.grid(pady=10)
+
+    sport_input = tk.Text(create_profile, height=1, width=30, font=('Arial', 15))
+    sport_input.grid()
+
     age_message = tk.Label(create_profile, text="Age: ", font=('Arial', 18))
-    age_message.grid()
+    age_message.grid(pady=10)
 
     age_input = tk.Text(create_profile, height=1, width=30, font=('Arial', 15))
     age_input.grid()
 
-    skill_message = tk.Label(create_profile, text="Enter skill level: ", font=('Arial', 18))
-    skill_message.grid()
+    skill_message = tk.Label(create_profile, text="Enter skill level (Beginner/Intermediate/Advanced): ", font=('Arial', 12))
+    skill_message.grid(pady=10)
 
     skill_input = tk.Text(create_profile, height=1, width=30, font=('Arial', 15))
     skill_input.grid()
 
-    goals_message = tk.Label(create_profile, text="Goals: ", font=('Arial', 18))
-    goals_message.grid()
+    goals_message = tk.Label(create_profile, text="Goals (e.g., Upper Body): ", font=('Arial', 15))
+    goals_message.grid(pady=10)
 
     goals_message = tk.Text(create_profile, height=1, width=30, font=('Arial', 15))
     goals_message.grid()
 
-    create_button = tk.Button(create_profile, height=1, width=30, text="Create Athlete!", font=('Arial', 15))
-    create_button.grid()
+    def create_athelte():
+        name_message = name_input.get("1.0", tk.END)
+        sport_message = sport_input.get("1.0", tk.END)
+        age_message = int(age_input.get("1.0", tk.END))
+        skill_message = skill_input.get("1.0", tk.END)
+        goal_message = goals_message.get("1.0", tk.END)
+        try:
+            athlete = Athlete((name_message, sport_message, age_message, skill_message, [], [], goal_message))
+            open_main()
+            print(athlete.get_all())
+        except IndexError:
+            print("Not all inputs were put in!")
+
+    create_button = tk.Button(create_profile, height=1, width=30, text="Create Athlete!", font=('Arial', 15), command=create_athelte)
+    create_button.grid(pady=10)
 
 
     create_profile.deiconify()
@@ -52,6 +76,7 @@ def open_main():
     main_window.geometry("800x500")
     main_window.configure(bg='Blue')
     screen.withdraw()
+    create_profile.withdraw()
     welcome_message = tk.Label(main_window, text=f"{name_message} Please select an action!", font=('Arial', 25))
     welcome_message.pack()
 
