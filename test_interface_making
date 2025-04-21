@@ -1,7 +1,7 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import OptionMenu, StringVar
 
-#Video used to learn how to use Tkinter https://youtu.be/ibf5cx221hk?si=6HI2Jnv6uQNmOW4T
+#Video used to learn how to use Tkinter https://youtu.be/ibf5cx221hk?si=6HI2Jnv6uQNmOW4T and https://youtu.be/3E_fK5hCUnI?feature=shared
 
 from Athlete_Class import Athlete
 from Excercise_Class import Exercise
@@ -9,9 +9,6 @@ from Workout_Class import Workout
 
 athlete = Athlete()
 
-sport_options = ["Baseball", "Basketball", "Football", "Soccer", "Hockey", "Golf", "Rugby", "Frisbee", "Corn Hole"]
-fittness_level_options = ["Beginner", "Intermediate", "Advanced"]
-goal_options = ["Upper Body", "Lower Body", "Core"]
 
 PREDEFINED_WORKOUTS = {
     "Legs": {
@@ -213,6 +210,9 @@ def rate_workout()->None:
 def open_Creator()->None:
     create_profile.geometry("375x550")
     create_profile.configure(bg="Aqua")
+    sports = StringVar()
+    difficulty = StringVar()
+    personal_goals = StringVar()
     main_window.withdraw()
     screen.withdraw()
     difficulty_rating.withdraw()
@@ -232,7 +232,8 @@ def open_Creator()->None:
     sport_message = tk.Label(create_profile, text="Enter your sport: ", font=('Arial, 18'), bg="Aqua")
     sport_message.grid(pady=10)
 
-    sport_input = ttk.Combobox(create_profile, values=sport_options)
+    sports.set("Click here to select sport!")
+    sport_input = OptionMenu(create_profile, sports, "Baseball","Basketball", "Football", "Soccer", "Hockey", "Golf", "Rugby", "Frisbee", "Corn Hole")
     sport_input.grid()
 
     age_message = tk.Label(create_profile, text="Age: ", font=('Arial', 18), bg="Aqua")
@@ -244,22 +245,24 @@ def open_Creator()->None:
     skill_message = tk.Label(create_profile, text="Enter skill level (Beginner/Intermediate/Advanced): ", font=('Arial', 12), bg="Aqua")
     skill_message.grid(pady=10)
 
-    skill_input = ttk.Combobox(create_profile, values=fittness_level_options)
+    difficulty.set("Select your skill level!")
+    skill_input = OptionMenu(create_profile, difficulty, "Beginner", "Intermediate", "Advanced")
     skill_input.grid()
 
     goals_message = tk.Label(create_profile, text="Goals (e.g., Upper Body): ", font=('Arial', 15), bg="Aqua")
     goals_message.grid(pady=10)
 
-    goals_message = ttk.Combobox(create_profile, values=goal_options)
+    personal_goals.set("Select a Workout Goal!")
+    goals_message = OptionMenu(create_profile, personal_goals, "Upper Body", "Lower Body", "Core")
     goals_message.grid()
 
     def create_athelte()->None:
         global athlete
         name_message = name_input.get("1.0", tk.END)
-        sport_message = sport_input.get()
+        sport_message = sports.get()
         age_message = int(age_input.get("1.0", tk.END))
-        skill_message = skill_input.get()
-        goal_message = goals_message.get()
+        skill_message = difficulty.get()
+        goal_message = personal_goals.get()
         try:
             athlete = Athlete((name_message, sport_message, age_message, skill_message, [], [], goal_message))
             open_main()
