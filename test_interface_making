@@ -1,14 +1,41 @@
 import tkinter as tk
 from Athlete_Class import Athlete
+from Excercise_Class import Exercise
+from Workout_Class import Workout
+
+athlete = Athlete
 
 screen = tk.Tk()
 main_window = tk.Toplevel()
 create_profile = tk.Toplevel()
+difficulty_rating = tk.Toplevel()
+difficulty_rating.withdraw()
 main_window.withdraw()
 create_profile.withdraw()
 
 
+def rate_workout():
+    difficulty_rating.geometry("450x225")
+    difficulty_rating.configure(bg="Red")
+    main_window.withdraw()
+    screen.withdraw()
+    create_profile.withdraw()
+    welcome_message = tk.Label(difficulty_rating, text="Rate your last workout (Easy, Moderate, Hard): ", font=('Arial', 15))
+    welcome_message.grid(row=0, column=0, columnspan=200,rowspan=50, pady=20, padx=10)
 
+    input_rating = tk.Text(difficulty_rating, height=1, width=30, font=('Arial', 15))
+    input_rating.grid(pady=20, padx=40)
+
+    def add_difficulty():
+        input_message = input_rating.get("1.0", tk.END)
+        athlete.log_performance(input_message)
+        open_main()
+
+
+    create_button = tk.Button(difficulty_rating, height=1, width=30, text="Add Difficulty", font=('Arial', 15), command=add_difficulty)
+    create_button.grid(pady=20, padx=40)
+
+    difficulty_rating.deiconify()
 
 
 def open_Creator():
@@ -16,6 +43,7 @@ def open_Creator():
     create_profile.configure(bg="Aqua")
     main_window.withdraw()
     screen.withdraw()
+    difficulty_rating.withdraw()
     welcome_message = tk.Label(create_profile, text="Please input the following information", font=('Arial', 15))
     welcome_message.grid(row=0, column=0, columnspan=200,rowspan=50, pady=20)
 
@@ -75,10 +103,11 @@ def open_Creator():
 
 def open_main():
     name_message = input_message.get("1.0", tk.END)
-    main_window.geometry("650x500")
+    main_window.geometry("625x500")
     main_window.configure(bg='Blue')
     screen.withdraw()
     create_profile.withdraw()
+    difficulty_rating.withdraw()
     welcome_message = tk.Label(main_window, text=f"{name_message} Please select an action!", font=('Arial', 25))
     welcome_message.grid(pady=20, padx=125)
 
@@ -91,7 +120,7 @@ def open_main():
     option_3 = tk.Button(main_window, height=1, width=30, text="View Workout Summary", font=('Arial', 15))
     option_3.grid(pady=20, padx=125)
 
-    option_4 = tk.Button(main_window, height=1, width=30, text="Rate a Workout", font=('Arial', 15))
+    option_4 = tk.Button(main_window, height=1, width=30, text="Rate a Workout", font=('Arial', 15), command=rate_workout)
     option_4.grid(pady=20, padx=125)
 
     option_5 = tk.Button(main_window, height=1, width=30, text="Exit program", font=('Arial', 15), command=main_window.destroy)
