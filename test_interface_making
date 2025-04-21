@@ -63,6 +63,8 @@ def open_Creator():
             print(athlete.get_all())
         except IndexError:
             print("Not all inputs were put in!")
+        except ValueError:
+            print("Entered Age is not an integer!")
 
     create_button = tk.Button(create_profile, height=1, width=30, text="Create Athlete!", font=('Arial', 15), command=create_athelte)
     create_button.grid(pady=10)
@@ -73,27 +75,27 @@ def open_Creator():
 
 def open_main():
     name_message = input_message.get("1.0", tk.END)
-    main_window.geometry("800x500")
+    main_window.geometry("650x500")
     main_window.configure(bg='Blue')
     screen.withdraw()
     create_profile.withdraw()
     welcome_message = tk.Label(main_window, text=f"{name_message} Please select an action!", font=('Arial', 25))
-    welcome_message.pack()
+    welcome_message.grid(pady=20, padx=125)
 
     option_1 = tk.Button(main_window, height=1, width=30, text="Create an Athlete Profile", font=('Arial', 15), command=open_Creator)
-    option_1.pack(padx = 0, pady = 20)
+    option_1.grid(pady=20, padx=125)
 
     option_2 = tk.Button(main_window, height=1, width=30, text="Add Predefined Workout", font=('Arial', 15))
-    option_2.pack(padx = 0, pady = 20)
+    option_2.grid(pady=20, padx=125)
 
     option_3 = tk.Button(main_window, height=1, width=30, text="View Workout Summary", font=('Arial', 15))
-    option_3.pack(padx = 0, pady = 20)
+    option_3.grid(pady=20, padx=125)
 
     option_4 = tk.Button(main_window, height=1, width=30, text="Rate a Workout", font=('Arial', 15))
-    option_4.pack(padx=0, pady=20)
+    option_4.grid(pady=20, padx=125)
 
     option_5 = tk.Button(main_window, height=1, width=30, text="Exit program", font=('Arial', 15), command=main_window.destroy)
-    option_5.pack(padx=0, pady=20)
+    option_5.grid(pady=20, padx=125)
 
     main_window.deiconify()
 
