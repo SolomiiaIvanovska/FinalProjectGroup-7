@@ -68,6 +68,6 @@ def readData(file_path)->tuple:
 
 #Big_Connor = Athlete(readData("C:\\Users\\Miles\\PycharmProjects\\Final MAD2502 project\\Test Athlete.txt"))
 
-
+#
 
 

@@ -345,3 +345,4 @@ screen.mainloop()
 
 
 #Maybe turn the excersise class into a data class all methods will still work only thing we will have to change is the constructor
+#

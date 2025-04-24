@@ -4,7 +4,7 @@ from Exercise_Class import Exercise
 from Workout_Class import Workout
 import json
 athlete = None
-#
+##
 PREDEFINED_WORKOUTS = {
     "Legs": {
         "Beginner": [
