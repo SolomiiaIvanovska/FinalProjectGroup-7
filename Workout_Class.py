@@ -48,7 +48,8 @@ class Workout:
             "Duration (hr)": self.duration,
             "Calories Burned": self.calories_burned,
             "Total Exercises": len(self.exercises),
-            "Total Sets": self.total_sets()
+            "Total Sets": self.total_sets(),
+            "Rating": self.rating
         }
 
     def rate_workout(self, rating: str):
@@ -56,6 +57,23 @@ class Workout:
         Allows the user to rate the workout based on how they felt (e.g., 'Easy', 'Moderate', 'Hard').
         """
         self.rating = rating
+
+    def get_exercise_names(self):
+        return list(self.exercises.keys())
+
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "duration": self.duration,
+            "calories_burned": self.calories_burned,
+            "workout_type": self.workout_type,
+            "rating": self.rating,
+            "exercises": {name: {
+                "sets": ex.sets,
+                "reps": ex.reps,
+                "weight": ex.weight
+            } for name, ex in self.exercises.items()}
+        }
 
 
 

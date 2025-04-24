@@ -7,7 +7,8 @@ from Athlete_Class import Athlete
 from Exercise_Class import Exercise
 from Workout_Class import Workout
 
-athlete = Athlete()
+athlete = None
+workouts = []
 
 
 PREDEFINED_WORKOUTS = {
@@ -113,8 +114,12 @@ def add_preset_workout()->None:
     def fetch_workout():
         category = entered_muscles.get("1.0", tk.END)
         skill = athlete.get_skill_level()
-        exercises = PREDEFINED_WORKOUTS[category.strip()][skill.strip()]
-        workout = Workout(f"{category} Day", 1.0, 300, {ex.name: ex for ex in exercises}, category)
+        skill_map = {1: "Beginner", 2: "Intermediate", 3: "Advanced"}
+        skill_level = skill if isinstance(skill, str) else skill_map.get(skill, "Beginner")
+        exercises = PREDEFINED_WORKOUTS[category.strip()][skill_level]
+
+        workout = Workout(f"{category}Day", 1.0, 300, {ex.name: ex for ex in exercises}, category)
+        workouts.append(workout)
         printed_workouts = tk.Label(add_workout, text=f"{workout}", font=('Arial', 18))
         printed_workouts.grid()
         athlete.add_workout(workout.name)
@@ -138,7 +143,7 @@ def display_athlete()->None:
     create_profile.withdraw()
     difficulty_rating.withdraw()
     add_workout.withdraw()
-    welcome_message = tk.Label(view_athlete, text="Your Athelte information is displayed below", font=('Arial', 15), bg='Green')
+    welcome_message = tk.Label(view_athlete, text="Your Athelte information is displayed here!", font=('Arial', 15), bg='Green')
     welcome_message.grid()
 
     athelte_name = tk.Label(view_athlete, text="Name: ", font=('Arial', 15), bg='Green')
@@ -148,11 +153,10 @@ def display_athlete()->None:
     athelte_name = tk.Label(view_athlete, text=f"{name}", font=('Arial', 18), bg='Green')
     athelte_name.grid(row=1, column=1, pady=20)
 
-    sport = athlete.get_sport()
-    sport_printer = tk.Label(view_athlete, text="Sport: ", font=('Arial', 18), bg='Green')
-    sport_printer.grid(row=4, column=0,pady=20)
-    sport_name = tk.Label(view_athlete, text=f"{sport}", font=('Arial', 18), bg='Green')
-    sport_name.grid(row=4, column=1, pady=20)
+    #sport = athlete.get_sport()
+    #sport_printer = tk.Label(view_athlete, text="Sport: ", font=('Arial', 18), bg='Green')
+    #sport_printer.grid(row=4, column=0,pady=20)
+    #sport_name = tk.Label(view_athlete, text=f"{sport}", font=('Arial', 18), bg='Green')
 
     age = athlete.get_age()
     sport_printer = tk.Label(view_athlete, text="Age: ", font=('Arial', 18), bg='Green')
@@ -166,12 +170,16 @@ def display_athlete()->None:
     display_level = tk.Label(view_athlete, text=f"{skill_level}", font=('Arial', 18), bg='Green')
     display_level.grid(row=9, column=1, pady=20)
 
-    athlete_workouts = athlete.get_workouts()
-    workouts_name = tk.Label(view_athlete, text="Workouts", font=('Arial', 18), bg='Green')
-    workouts_name.grid(row=15, column=0, pady=20)
-    for i in range(len(athlete_workouts)):
-        workout_display = tk.Label(view_athlete, text=f"{athlete_workouts[i]}", font=('Arial', 18))
-        workout_display.grid(row=15+i ,pady=20)
+    workouts_name = tk.Label(view_athlete, text="Workouts", font=('Arial', 18, 'bold'), bg='Green')
+    workouts_name.grid(row=15, column=0, pady=10)
+
+    row_offset = 16
+    for i, workout_name in enumerate(athlete.get_workouts()):
+        for w in workouts:  # make sure 'workouts' is passed globally or added at top
+            if w.name == workout_name:
+                workout_display = tk.Label(view_athlete, text=str(w), font=('Arial', 12), bg='lightgreen', justify='left', anchor='w')
+                workout_display.grid(row=row_offset + i, column=0, columnspan=2, sticky='w', padx=10, pady=5)
+                break
 
 
     return_home = tk.Button(view_athlete, text="Return to menu", width=30, height=1, command=open_main)
@@ -229,12 +237,12 @@ def open_Creator()->None:
     name_input = tk.Text(create_profile, height=1, width=30, font=('Arial', 15))
     name_input.grid()
 
-    sport_message = tk.Label(create_profile, text="Enter your sport: ", font=('Arial, 18'), bg="Aqua")
-    sport_message.grid(pady=10)
+    #sport_message = tk.Label(create_profile, text="Enter your sport: ", font=('Arial, 18'), bg="Aqua")
+    #sport_message.grid(pady=10)
 
-    sports.set("Click here to select sport!")
-    sport_input = OptionMenu(create_profile, sports, "Baseball","Basketball", "Football", "Soccer", "Hockey", "Golf", "Rugby", "Frisbee", "Corn Hole")
-    sport_input.grid()
+   # sports.set("Click here to select sport!")
+    #sport_input = OptionMenu(create_profile, sports, "Baseball","Basketball", "Football", "Soccer", "Hockey", "Golf", "Rugby", "Frisbee", "Corn Hole")
+   # sport_input.grid()
 
     age_message = tk.Label(create_profile, text="Age: ", font=('Arial', 18), bg="Aqua")
     age_message.grid(pady=10)
@@ -264,7 +272,7 @@ def open_Creator()->None:
         skill_message = difficulty.get()
         goal_message = personal_goals.get()
         try:
-            athlete = Athlete((name_message, sport_message, age_message, skill_message, [], [], goal_message))
+            athlete = Athlete((name_message.strip(), int(age_message), skill_message.strip(), [], [], goal_message.strip()))
             open_main()
             print(athlete.get_all())
         except IndexError:

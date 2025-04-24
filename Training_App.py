@@ -2,7 +2,7 @@ import sys
 from Athlete_Class import Athlete , readData
 from Exercise_Class import Exercise
 from Workout_Class import Workout
-
+import json
 athlete = None
 
 PREDEFINED_WORKOUTS = {
@@ -112,9 +112,18 @@ def generate_workout(skill_level, category):
     workout = Workout(workout_name, total_duration, calories,
                       {ex.get_name(): ex for ex in workout_list}, category)
     return workout
+def save_athletes(athletes, filename="athletes.json"):
+    with open(filename, "w") as f:
+        json.dump([a.get_all() for a in athletes], f, indent=4)
 
+def load_athletes(filename="athletes.json"):
+    try:
+        with open(filename, "r") as f:
+            return [Athlete(tuple(a)) for a in json.load(f)]
+    except FileNotFoundError:
+        return []
 def main():
-    athletes = []
+    athletes = load_athletes()   # ⬅️ replaces `athletes = []`
     workouts = []
 
     while True:
@@ -184,12 +193,15 @@ def main():
                 print(athlete.get_all())
 
 
+
         elif choice == "5":
             print("Saving progress and exiting...")
+            save_athletes(athletes)  # ⬅️ ADD THIS LINE
             break
 
         else:
             print("Invalid option. Please try again.")
+
 if __name__ == "__main__":
         main()
 
