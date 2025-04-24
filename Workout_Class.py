@@ -75,7 +75,7 @@ class Workout:
             } for name, ex in self.exercises.items()}
         }
 
-
+#
 
 
 
