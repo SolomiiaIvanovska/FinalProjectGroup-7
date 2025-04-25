@@ -111,7 +111,7 @@ def save_athletes(athletes, filename="athletes.json"):
     :param athletes: (list[Athlete]) A list of all the created athletes.
     :param filename: (str) The path to the file that stores all the athletes.
     """
-    with open(filename, "a") as f:
+    with open(filename, "w") as f:
         print(athlete_saver)
         json.dump([a.get_all() for a in athlete_saver], f, indent=4)
 
@@ -130,8 +130,12 @@ def load_athletes(filename="athletes.json"):
 
 def load_previous_athlete()->None:
     """
-    Creates the screen for loading previously created athletes from json file if json file is not empty. Has a dropdown menu with the athlete names. When athlete
-    is clicked, loads athlete info. When enter is clicked, it returns to main screen.
+    Opens a screen for loading previously created athletes from a JSON file if the file is not empty.
+    Displays a dropdown menu with athlete names. When an athlete is selected and loaded:
+    Sets the global athlete variable.
+    Rebuilds the athlete's workout objects based on their saved workouts.
+    Returns to the main menu.
+    If no athletes exist, skips directly to the main menu.
     """
     old_athletes  = load_athletes("athletes.json")
     if(len(old_athletes) != 0):
@@ -158,12 +162,32 @@ def load_previous_athlete()->None:
         def prev_athelte_loader()->None:
             """
             Sets athlete equal to athlete chosen by user. Then, opens main function.
+
             """
             global athlete
             chosen_name = made_dropdown.get()
             for i in range(len(old_athletes)):
                 if old_athletes[i].get_name() == chosen_name:
                     athlete = old_athletes[i]
+                    workouts.clear()
+                    athlete_workout_names = athlete.get_workouts()
+                    skill_level = athlete.get_skill_level()
+                    skill_map = { "Beginner","Intermediate", "Advanced"}
+                    skill_level_text = skill_level if isinstance(skill_level, str) else skill_map.get(skill_level,"Beginner")
+
+                    for workout_name in athlete_workout_names:
+                        if "Legs" in workout_name:
+                            category = "Legs"
+                        elif "Arms" in workout_name:
+                            category = "Arms"
+                        elif "Core" in workout_name:
+                            category = "Core"
+                        else:
+                            continue
+
+                        exercises = PREDEFINED_WORKOUTS[category][skill_level_text]
+                        workout = Workout(f"{category} Day: ", 1.0, 300, {ex.name: ex for ex in exercises}, category)
+                        workouts.append(workout)
                     open_main()
                     break
 
@@ -271,15 +295,15 @@ def display_athlete()->None:
         workouts_name.grid(row=15, column=0, pady=10, padx=100)
 
         row_offset = 16
-        print(athlete.get_workouts())
-        #for i, workout_name in enumerate(athlete.get_workouts()):
-        workout_rating = athlete.get_performance()[0] if 0 < len(athlete.get_performance()) else "Not Rated"
-            #for w in workouts:
-
-        workout_text = f"{str(athlete.get_workouts()[0])}\nRating: {workout_rating.strip()}"  # <-- Add rating nicely under workout
-        workout_display = tk.Label(view_athlete, text=workout_text, font=('Arial', 12), bg='Green',
+        for i, workout_name in enumerate(athlete.get_workouts()):
+            workout_rating = athlete.get_performance()[i] if i < len(athlete.get_performance()) else "Not Rated"
+            for w in workouts:
+                if w.name == workout_name:
+                    workout_text = f"{str(w)}\nRating: {workout_rating.strip()}"  # <-- Add rating nicely under workout
+                    workout_display = tk.Label(view_athlete, text=workout_text, font=('Arial', 12), bg='Green',
                                            justify='left', anchor='e', fg='#FFFFFF')
-        workout_display.grid(row=15, column=1, pady=1)
+                workout_display.grid(row=15, column=1, pady=1)
+                break
 
 
 
