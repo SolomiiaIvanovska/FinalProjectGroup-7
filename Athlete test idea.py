@@ -7,10 +7,11 @@ import json
 #Video used to learn how to use Tkinter https://youtu.be/ibf5cx221hk?si=6HI2Jnv6uQNmOW4T and https://youtu.be/3E_fK5hCUnI?feature=shared
 
 from Athlete_Class import Athlete
-from Excercise_Class import Exercise
+from Exercise_Class import Exercise
 from Workout_Class import Workout
 
 athlete = None
+athlete_saver = []
 workouts = []
 
 
@@ -86,6 +87,7 @@ PREDEFINED_WORKOUTS = {
     }
 }
 
+# Creates all windows
 screen = tk.Tk()
 main_window = tk.Toplevel()
 create_profile = tk.Toplevel()
@@ -102,11 +104,21 @@ load_previous.withdraw()
 user_message = tk.Label(main_window, text=f"", font=('Arial', 18), bg='Blue', fg='White')
 
 def save_athletes(athletes, filename="athletes.json"):
+    """
+    Opens the json file storing the athletes and saves any created athlete for future use.
+    :param athletes: (list[Athlete]) A list of all the created athletes.
+    :param filename: (str) The path to the file that stores all the athletes.
+    """
     with open(filename, "w") as f:
-        json.dump([a.get_all() for a in athletes], f, indent=4)
-
+        print(athlete_saver)
+        json.dump([a.get_all() for a in athlete_saver], f, indent=4)
 
 def load_athletes(filename="athletes.json"):
+    """
+    Opens the file storing the athletes and reads them into the program
+    :param filename: (str) The path to the file that stores all the athletes.
+    :return: (list[Athlete]) A list of the created athletes or an empty list if no athletes exist.
+    """
     try:
         with open(filename, "r") as f:
             return [Athlete(tuple(a)) for a in json.load(f)]
@@ -115,41 +127,57 @@ def load_athletes(filename="athletes.json"):
 
 
 def load_previous_athlete()->None:
-    load_previous.geometry("800x500")
-    load_previous.configure(bg="Magenta")
-    previous_athletes = StringVar()
-    screen.withdraw()
-    main_window.withdraw()
-    difficulty_rating.withdraw()
-    view_athlete.withdraw()
-    create_profile.withdraw()
-
-    welcome_message = tk.Label(load_previous, text="Load previous athletes", font=('Arial', 15), bg='Magenta')
-    welcome_message.grid()
+    """
+    Creates the screen for loading previously created athletes from json file if json file is not empty. Has a dropdown menu with the athlete names. When athlete
+    is clicked, loads athlete info. When enter is clicked, it returns to main screen.
+    """
     old_athletes  = load_athletes("athletes.json")
-    final_old_athletes = []
-    for i in range(len(old_athletes)):
-        final_old_athletes.append(old_athletes[i].get_name())
+    if(len(old_athletes) != 0):
+        load_previous.geometry("800x500")
+        load_previous.configure(bg="Magenta")
+        previous_athletes = StringVar()
+        screen.withdraw()
+        main_window.withdraw()
+        difficulty_rating.withdraw()
+        view_athlete.withdraw()
+        create_profile.withdraw()
 
-    made_dropdown = ttk.Combobox(load_previous, values=final_old_athletes)
-    made_dropdown.grid()
+        welcome_message = tk.Label(load_previous, text="Load previous athletes", font=('Arial', 25), bg='Magenta')
+        welcome_message.grid(padx=225, pady=50)
+        final_old_athletes = []
 
-    def prev_athelte_loader()->None:
-        global athlete
-        chosen_name = made_dropdown.get()
+        #Gets all athlete names from json file
         for i in range(len(old_athletes)):
-            if old_athletes[i].get_name() == chosen_name:
-                athlete = old_athletes[i]
-                open_main()
-                break
+            final_old_athletes.append(old_athletes[i].get_name())
 
-    final_button = tk.Button(load_previous, height=1, width=30, text="Load selected athlete", font=('Arial',15), command=prev_athelte_loader)
-    final_button.grid()
+        made_dropdown = ttk.Combobox(load_previous, values=final_old_athletes)
+        made_dropdown.grid(padx=225, pady=50)
+
+        def prev_athelte_loader()->None:
+            """
+            Sets athlete equal to athlete chosen by user. Then, opens main function.
+            """
+            global athlete
+            chosen_name = made_dropdown.get()
+            for i in range(len(old_athletes)):
+                if old_athletes[i].get_name() == chosen_name:
+                    athlete = old_athletes[i]
+                    open_main()
+                    break
+
+        final_button = tk.Button(load_previous, height=1, width=30, text="Load selected athlete", font=('Arial',15), command=prev_athelte_loader)
+        final_button.grid(padx=225)
+    else:
+        open_main()
 
 
     load_previous.deiconify()
 
 def add_preset_workout()->None:
+    """
+    Creates a screen with a dropdown menu of the different muscle groups for workouts. When a workout is selected, it is displayed on the screen
+     and added to the athlete's profile. When enter is clicked, saves workout to the athlete and returns to the main screen. Screen is only displayed if athlete is not none.
+    """
     if athlete != None:
         add_workout.geometry("800x500")
         add_workout.configure(bg="#CD7F32")
@@ -169,13 +197,16 @@ def add_preset_workout()->None:
 
 
         def fetch_workout():
+            """
+            Loops through pre-made workout dictionary to find proper workout based on athlete skill and desired muscle group.
+            """
             category = workouts_variable.get()
             skill = athlete.get_skill_level()
             skill_map = {1: "Beginner", 2: "Intermediate", 3: "Advanced"}
             skill_level = skill if isinstance(skill, str) else skill_map.get(skill, "Beginner")
             exercises = PREDEFINED_WORKOUTS[category.strip()][skill_level]
 
-            workout = Workout(f"{category}Day", 1.0, 300, {ex.name: ex for ex in exercises}, category)
+            workout = Workout(f"{category} Day: ", 1.0, 300, {ex.name: ex for ex in exercises}, category)
             workouts.append(workout)
             printed_workouts = tk.Label(add_workout, text=f"{workout}", font=('Arial', 18),bg='#CD7F32')
             printed_workouts.grid()
@@ -195,6 +226,9 @@ def add_preset_workout()->None:
 
 
 def display_athlete()->None:
+    """
+    Gets all attributes of athletes and displays them to the screen. Screen only opens if athlete is not none. Exit button returns to main screen.
+    """
     if athlete != None:
         view_athlete.geometry("850x500")
         view_athlete.configure(bg="Green")
@@ -248,7 +282,7 @@ def display_athlete()->None:
 
 
         return_home = tk.Button(view_athlete, text="Return to menu", width=30, height=1, command=open_main)
-        return_home.grid(column=0,row=20)
+        return_home.grid(column=1,row=20)
 
 
         view_athlete.deiconify()
@@ -257,6 +291,10 @@ def display_athlete()->None:
 
 
 def rate_workout()->None:
+    """
+    Prompts the user with a dropdown to select the difficulty for their workout. Enter button adds that workout difficulty to the athlete's profile and sends back
+    to the main screen.
+    """
     if athlete != None:
         difficulty_rating.geometry("450x225")
         difficulty_rating.configure(bg="Red")
@@ -275,6 +313,9 @@ def rate_workout()->None:
         input_rating.grid(pady=20, padx=40)
 
         def add_difficulty():
+            """
+            Gets user input from dropdown box and adds it to the athlete profile. Will run when enter button is clicked.
+            """
             input_message = new_rating_dropdown.get()
             athlete.log_performance(input_message)
             open_main()
@@ -289,6 +330,10 @@ def rate_workout()->None:
 
 
 def open_Creator()->None:
+    """
+    Allows user to input attributes of an athlete. Age and name are prompted with a textbox, while skill and goal are prompted with a dropdown menu. Will throw
+    an error if age is not an integer.
+    """
     create_profile.geometry("375x550")
     create_profile.configure(bg="Aqua")
     sports = StringVar()
@@ -339,6 +384,9 @@ def open_Creator()->None:
     goals_message.grid()
 
     def create_athelte()->None:
+        """
+        Takes all inputs from user and creates a new athlete class object.
+        """
         global athlete
         name_message = name_input.get("1.0", tk.END)
         sport_message = sports.get()
@@ -347,7 +395,8 @@ def open_Creator()->None:
         goal_message = personal_goals.get()
         try:
             athlete = Athlete((name_message.strip(), int(age_message), skill_message.strip(), [], [], goal_message.strip()))
-            save_athletes(athlete, "athletes.json")
+            athlete_saver.append(athlete)
+            save_athletes(athlete)
             open_main()
             print(athlete.get_all())
         except IndexError:
@@ -363,6 +412,9 @@ def open_Creator()->None:
 
 
 def open_main()->None:
+    """
+    Displays the main screen for all the options of the app.
+    """
     global athlete
     name_message = input_message.get("1.0", tk.END)
     main_window.geometry("625x625")
@@ -404,6 +456,9 @@ def open_main()->None:
     main_window.deiconify()
 
 def get_input()->bool:
+    """
+    Asks the user for their name.
+    """
     name_message = input_message.get("1.0", tk.END)
     print(name_message)
     open_main()
