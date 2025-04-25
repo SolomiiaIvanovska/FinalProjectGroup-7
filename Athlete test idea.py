@@ -95,6 +95,7 @@ main_window.withdraw()
 create_profile.withdraw()
 view_athlete.withdraw()
 add_workout.withdraw()
+user_message = tk.Label(main_window, text=f"", font=('Arial', 18), bg='Blue', fg='White')
 
 
 
@@ -212,14 +213,16 @@ def rate_workout()->None:
         create_profile.withdraw()
         view_athlete.withdraw()
         add_workout.withdraw()
+        new_rating_dropdown = StringVar()
         welcome_message = tk.Label(difficulty_rating, text="Rate your last workout (Easy, Moderate, Hard): ", font=('Arial', 15), bg='Red')
         welcome_message.grid(row=0, column=0, columnspan=200,rowspan=50, pady=20, padx=10)
 
-        input_rating = tk.Text(difficulty_rating, height=1, width=30, font=('Arial', 15))
+        new_rating_dropdown.set("Select a difficulty rating")
+        input_rating = OptionMenu(difficulty_rating, new_rating_dropdown, "Easy", "Medium", "Hard")
         input_rating.grid(pady=20, padx=40)
 
         def add_difficulty():
-            input_message = input_rating.get("1.0", tk.END)
+            input_message = new_rating_dropdown.get()
             athlete.log_performance(input_message)
             open_main()
 
@@ -321,7 +324,6 @@ def open_main()->None:
     else:
         useable_message = "You may now select other actions on your athlete!"
 
-    user_message = tk.Label(main_window, text=f"", font=('Arial', 18), bg='Blue', fg='White')
     user_message.config(text=useable_message)
     user_message.grid()
 
