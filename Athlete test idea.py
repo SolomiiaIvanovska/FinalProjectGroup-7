@@ -7,7 +7,7 @@ import json
 #Video used to learn how to use Tkinter https://youtu.be/ibf5cx221hk?si=6HI2Jnv6uQNmOW4T and https://youtu.be/3E_fK5hCUnI?feature=shared
 
 from Athlete_Class import Athlete
-from Exercise_Class import Exercise
+from Excercise_Class import Exercise #if this line is showing error just retype it and it always works
 from Workout_Class import Workout
 
 athlete = None
@@ -102,6 +102,8 @@ view_athlete.withdraw()
 add_workout.withdraw()
 load_previous.withdraw()
 user_message = tk.Label(main_window, text=f"", font=('Arial', 18), bg='Blue', fg='White')
+printed_workouts = tk.Label(add_workout, font=('Arial', 18), bg='#CD7F32')
+
 
 def save_athletes(athletes, filename="athletes.json"):
     """
@@ -179,6 +181,7 @@ def add_preset_workout()->None:
      and added to the athlete's profile. When enter is clicked, saves workout to the athlete and returns to the main screen. Screen is only displayed if athlete is not none.
     """
     if athlete != None:
+        printed_workouts.config(text="")
         add_workout.geometry("800x500")
         add_workout.configure(bg="#CD7F32")
         workouts_variable = StringVar()
@@ -205,10 +208,9 @@ def add_preset_workout()->None:
             skill_map = {1: "Beginner", 2: "Intermediate", 3: "Advanced"}
             skill_level = skill if isinstance(skill, str) else skill_map.get(skill, "Beginner")
             exercises = PREDEFINED_WORKOUTS[category.strip()][skill_level]
-
             workout = Workout(f"{category} Day: ", 1.0, 300, {ex.name: ex for ex in exercises}, category)
+            printed_workouts.config(text=f"{workout}")
             workouts.append(workout)
-            printed_workouts = tk.Label(add_workout, text=f"{workout}", font=('Arial', 18),bg='#CD7F32')
             printed_workouts.grid()
             athlete.add_workout(workout.name)
             go_home = tk.Button(add_workout, text="Return to main screen", height=1, width=30, font=('Arial', 18), command=open_main)
