@@ -4,7 +4,6 @@ from Exercise_Class import Exercise
 from Workout_Class import Workout
 import json
 athlete = None
-##
 PREDEFINED_WORKOUTS = {
     "Legs": {
         "Beginner": [
@@ -123,7 +122,7 @@ def load_athletes(filename="athletes.json"):
     except FileNotFoundError:
         return []
 def main():
-    athletes = load_athletes()   # ⬅️ replaces `athletes = []`
+    athletes = load_athletes()   
     workouts = []
 
     while True:
@@ -196,7 +195,7 @@ def main():
 
         elif choice == "5":
             print("Saving progress and exiting...")
-            save_athletes(athletes)  # ⬅️ ADD THIS LINE
+            save_athletes(athletes)  
             break
 
         else:
