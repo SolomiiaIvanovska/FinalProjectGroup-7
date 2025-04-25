@@ -7,7 +7,7 @@ import json
 #Video used to learn how to use Tkinter https://youtu.be/ibf5cx221hk?si=6HI2Jnv6uQNmOW4T and https://youtu.be/3E_fK5hCUnI?feature=shared
 
 from Athlete_Class import Athlete
-from Excercise_Class import Exercise #if this line is showing error just retype it and it always works
+from Exercise_Class import Exercise
 from Workout_Class import Workout
 
 athlete = None
