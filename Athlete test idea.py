@@ -11,6 +11,7 @@ from Excercise_Class import Exercise
 from Workout_Class import Workout
 
 athlete = None
+athlete_saver = []
 workouts = []
 
 
@@ -103,8 +104,8 @@ user_message = tk.Label(main_window, text=f"", font=('Arial', 18), bg='Blue', fg
 
 def save_athletes(athletes, filename="athletes.json"):
     with open(filename, "w") as f:
-        json.dump([a.get_all() for a in athletes], f, indent=4)
-
+        print(athlete_saver)
+        json.dump([a.get_all() for a in athlete_saver], f, indent=4)
 
 def load_athletes(filename="athletes.json"):
     try:
@@ -115,36 +116,39 @@ def load_athletes(filename="athletes.json"):
 
 
 def load_previous_athlete()->None:
-    load_previous.geometry("800x500")
-    load_previous.configure(bg="Magenta")
-    previous_athletes = StringVar()
-    screen.withdraw()
-    main_window.withdraw()
-    difficulty_rating.withdraw()
-    view_athlete.withdraw()
-    create_profile.withdraw()
-
-    welcome_message = tk.Label(load_previous, text="Load previous athletes", font=('Arial', 15), bg='Magenta')
-    welcome_message.grid()
     old_athletes  = load_athletes("athletes.json")
-    final_old_athletes = []
-    for i in range(len(old_athletes)):
-        final_old_athletes.append(old_athletes[i].get_name())
+    if(len(old_athletes) != 0):
+        load_previous.geometry("800x500")
+        load_previous.configure(bg="Magenta")
+        previous_athletes = StringVar()
+        screen.withdraw()
+        main_window.withdraw()
+        difficulty_rating.withdraw()
+        view_athlete.withdraw()
+        create_profile.withdraw()
 
-    made_dropdown = ttk.Combobox(load_previous, values=final_old_athletes)
-    made_dropdown.grid()
-
-    def prev_athelte_loader()->None:
-        global athlete
-        chosen_name = made_dropdown.get()
+        welcome_message = tk.Label(load_previous, text="Load previous athletes", font=('Arial', 25), bg='Magenta')
+        welcome_message.grid(padx=225, pady=50)
+        final_old_athletes = []
         for i in range(len(old_athletes)):
-            if old_athletes[i].get_name() == chosen_name:
-                athlete = old_athletes[i]
-                open_main()
-                break
+            final_old_athletes.append(old_athletes[i].get_name())
 
-    final_button = tk.Button(load_previous, height=1, width=30, text="Load selected athlete", font=('Arial',15), command=prev_athelte_loader)
-    final_button.grid()
+        made_dropdown = ttk.Combobox(load_previous, values=final_old_athletes)
+        made_dropdown.grid(padx=225, pady=50)
+
+        def prev_athelte_loader()->None:
+            global athlete
+            chosen_name = made_dropdown.get()
+            for i in range(len(old_athletes)):
+                if old_athletes[i].get_name() == chosen_name:
+                    athlete = old_athletes[i]
+                    open_main()
+                    break
+
+        final_button = tk.Button(load_previous, height=1, width=30, text="Load selected athlete", font=('Arial',15), command=prev_athelte_loader)
+        final_button.grid(padx=225)
+    else:
+        open_main()
 
 
     load_previous.deiconify()
@@ -347,7 +351,8 @@ def open_Creator()->None:
         goal_message = personal_goals.get()
         try:
             athlete = Athlete((name_message.strip(), int(age_message), skill_message.strip(), [], [], goal_message.strip()))
-            save_athletes(athlete, "athletes.json")
+            athlete_saver.append(athlete)
+            save_athletes(athlete)
             open_main()
             print(athlete.get_all())
         except IndexError:
