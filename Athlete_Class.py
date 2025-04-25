@@ -10,8 +10,15 @@ class Athlete:
         self.age = input_tuple[1] if len(input_tuple) >= 2 else default_values[1]
         self.skill_level = input_tuple[2] if len(input_tuple) >= 3 else default_values[2]
 
-        self.workouts = input_tuple[3].split(" ") if isinstance(input_tuple[3], str) else input_tuple[3] if len(input_tuple) >= 4 else default_values[3]
-        self.performance = input_tuple[4].split(" ") if isinstance(input_tuple[4], str) else input_tuple[4] if len(input_tuple) >= 5 else default_values[4]
+        self.workouts = (
+            input_tuple[3].split(" ") if len(input_tuple) >= 4 and isinstance(input_tuple[3], str)
+            else input_tuple[3] if len(input_tuple) >= 4 else default_values[3]
+        )
+        self.performance = (
+            input_tuple[4].split(" ") if len(input_tuple) >= 5 and  isinstance(input_tuple[4], str)
+            else input_tuple[4] if len(input_tuple) >= 5 else default_values[4]
+        )
+
 
         self.goals = input_tuple[5] if len(input_tuple) >= 6 else default_values[5]
 
@@ -39,7 +46,7 @@ class Athlete:
         print(", ".join(self.workouts))
 
     def get_all(self):
-        return self.name, self.age, self.skill_level, self.workouts, #self.performance, self.goals
+        return self.name, self.age, self.skill_level, self.workouts, self.performance, self.goals
 
     def add_workout(self, new_workout: str):
         self.workouts.append(new_workout)
