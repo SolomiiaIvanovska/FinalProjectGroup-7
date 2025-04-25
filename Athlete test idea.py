@@ -110,11 +110,11 @@ def add_preset_workout()->None:
         view_athlete.withdraw()
         create_profile.withdraw()
         welcome_message = tk.Label(add_workout, text="Choose a category (Legs/Arms/Core): ", font=('Arial', 15), bg="#CD7F32")
-        welcome_message.grid()
+        welcome_message.grid(padx=225, pady=20)
 
         workouts_variable.set("Select your muscle here!")
         entered_muscles = tk.OptionMenu(add_workout, workouts_variable,"Legs", "Arms", "Core")
-        entered_muscles.grid()
+        entered_muscles.grid(padx=225, pady=20)
 
 
         def fetch_workout():
@@ -126,7 +126,7 @@ def add_preset_workout()->None:
 
             workout = Workout(f"{category}Day", 1.0, 300, {ex.name: ex for ex in exercises}, category)
             workouts.append(workout)
-            printed_workouts = tk.Label(add_workout, text=f"{workout}", font=('Arial', 18))
+            printed_workouts = tk.Label(add_workout, text=f"{workout}", font=('Arial', 18),bg='#CD7F32')
             printed_workouts.grid()
             athlete.add_workout(workout.name)
             go_home = tk.Button(add_workout, text="Return to main screen", height=1, width=30, font=('Arial', 18), command=open_main)
@@ -189,8 +189,8 @@ def display_athlete()->None:
                 if w.name == workout_name:
                     workout_text = f"{str(w)}\nRating: {workout_rating.strip()}"  # <-- Add rating nicely under workout
                     workout_display = tk.Label(view_athlete, text=workout_text, font=('Arial', 12), bg='lightgreen',
-                                           justify='left', anchor='w')
-                workout_display.grid(row=row_offset + i, column=0, columnspan=2, sticky='w', padx=10, pady=5)
+                                           justify='left', anchor='e')
+                workout_display.grid(row=row_offset + i, column=3, columnspan=2, sticky='e', padx=10, pady=5)
                 break
 
 
@@ -264,7 +264,7 @@ def open_Creator()->None:
     #sport_input = OptionMenu(create_profile, sports, "Baseball","Basketball", "Football", "Soccer", "Hockey", "Golf", "Rugby", "Frisbee", "Corn Hole")
    # sport_input.grid()
 
-    age_message = tk.Label(create_profile, text="Age: ", font=('Arial', 18), bg="Aqua")
+    age_message = tk.Label(create_profile, text="Age (Must be an integer): ", font=('Arial', 18), bg="Aqua")
     age_message.grid(pady=10)
 
     age_input = tk.Text(create_profile, height=1, width=30, font=('Arial', 15))
