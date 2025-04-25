@@ -4,7 +4,7 @@ from tkinter import OptionMenu, StringVar
 #Video used to learn how to use Tkinter https://youtu.be/ibf5cx221hk?si=6HI2Jnv6uQNmOW4T and https://youtu.be/3E_fK5hCUnI?feature=shared
 
 from Athlete_Class import Athlete
-from Exercise_Class import Exercise
+from Excercise_Class import Exercise
 from Workout_Class import Workout
 
 athlete = None
@@ -98,121 +98,133 @@ add_workout.withdraw()
 
 
 def add_preset_workout()->None:
-    add_workout.geometry("800x500")
-    add_workout.configure(bg="#CD7F32")
-    screen.withdraw()
-    main_window.withdraw()
-    difficulty_rating.withdraw()
-    view_athlete.withdraw()
-    create_profile.withdraw()
-    welcome_message = tk.Label(add_workout, text="Choose a category (Legs/Arms/Core): ", font=('Arial', 15), bg="#CD7F32")
-    welcome_message.grid()
+    if athlete != None:
+        add_workout.geometry("800x500")
+        add_workout.configure(bg="#CD7F32")
+        workouts_variable = StringVar()
+        screen.withdraw()
+        main_window.withdraw()
+        difficulty_rating.withdraw()
+        view_athlete.withdraw()
+        create_profile.withdraw()
+        welcome_message = tk.Label(add_workout, text="Choose a category (Legs/Arms/Core): ", font=('Arial', 15), bg="#CD7F32")
+        welcome_message.grid()
 
-    entered_muscles = tk.Text(add_workout, width=30, height=1, font=('Arial', 18))
-    entered_muscles.grid()
+        workouts_variable.set("Select your muscle here!")
+        entered_muscles = tk.OptionMenu(add_workout, workouts_variable,"Legs", "Arms", "Core")
+        entered_muscles.grid()
 
-    def fetch_workout():
-        category = entered_muscles.get("1.0", tk.END)
-        skill = athlete.get_skill_level()
-        skill_map = {1: "Beginner", 2: "Intermediate", 3: "Advanced"}
-        skill_level = skill if isinstance(skill, str) else skill_map.get(skill, "Beginner")
-        exercises = PREDEFINED_WORKOUTS[category.strip()][skill_level]
 
-        workout = Workout(f"{category}Day", 1.0, 300, {ex.name: ex for ex in exercises}, category)
-        workouts.append(workout)
-        printed_workouts = tk.Label(add_workout, text=f"{workout}", font=('Arial', 18))
-        printed_workouts.grid()
-        athlete.add_workout(workout.name)
-        go_home = tk.Button(add_workout, text="Return to main screen", height=1, width=30, font=('Arial', 18), command=open_main)
-        go_home.grid()
-        #open_main()
+        def fetch_workout():
+            category = workouts_variable.get()
+            skill = athlete.get_skill_level()
+            skill_map = {1: "Beginner", 2: "Intermediate", 3: "Advanced"}
+            skill_level = skill if isinstance(skill, str) else skill_map.get(skill, "Beginner")
+            exercises = PREDEFINED_WORKOUTS[category.strip()][skill_level]
 
-    enter_button = tk.Button(add_workout, text="See suggested workout", width=30, height=1, font=('Arial', 18), command=fetch_workout)
-    enter_button.grid()
+            workout = Workout(f"{category}Day", 1.0, 300, {ex.name: ex for ex in exercises}, category)
+            workouts.append(workout)
+            printed_workouts = tk.Label(add_workout, text=f"{workout}", font=('Arial', 18))
+            printed_workouts.grid()
+            athlete.add_workout(workout.name)
+            go_home = tk.Button(add_workout, text="Return to main screen", height=1, width=30, font=('Arial', 18), command=open_main)
+            go_home.grid()
+            #open_main()
 
-    add_workout.deiconify()
+        enter_button = tk.Button(add_workout, text="See suggested workout", width=30, height=1, font=('Arial', 18), command=fetch_workout)
+        enter_button.grid()
+
+        add_workout.deiconify()
+    else:
+        open_main()
 
 
 
 
 def display_athlete()->None:
-    view_athlete.geometry("800x500")
-    view_athlete.configure(bg="Green")
-    main_window.withdraw()
-    screen.withdraw()
-    create_profile.withdraw()
-    difficulty_rating.withdraw()
-    add_workout.withdraw()
-    welcome_message = tk.Label(view_athlete, text="Your Athelte information is displayed here!", font=('Arial', 15), bg='Green')
-    welcome_message.grid()
+    if athlete != None:
+        view_athlete.geometry("800x500")
+        view_athlete.configure(bg="Green")
+        main_window.withdraw()
+        screen.withdraw()
+        create_profile.withdraw()
+        difficulty_rating.withdraw()
+        add_workout.withdraw()
+        welcome_message = tk.Label(view_athlete, text="Your Athelte information is displayed here!", font=('Arial', 15), bg='Green')
+        welcome_message.grid()
 
-    athelte_name = tk.Label(view_athlete, text="Name: ", font=('Arial', 15), bg='Green')
-    athelte_name.grid(row=1, column=0, pady=20)
+        athelte_name = tk.Label(view_athlete, text="Name: ", font=('Arial', 15), bg='Green')
+        athelte_name.grid(row=1, column=0, pady=20)
 
-    name = athlete.get_name()
-    athelte_name = tk.Label(view_athlete, text=f"{name}", font=('Arial', 18), bg='Green')
-    athelte_name.grid(row=1, column=1, pady=20)
+        name = athlete.get_name()
+        athelte_name = tk.Label(view_athlete, text=f"{name}", font=('Arial', 18), bg='Green')
+        athelte_name.grid(row=1, column=1, pady=20)
 
-    #sport = athlete.get_sport()
-    #sport_printer = tk.Label(view_athlete, text="Sport: ", font=('Arial', 18), bg='Green')
-    #sport_printer.grid(row=4, column=0,pady=20)
-    #sport_name = tk.Label(view_athlete, text=f"{sport}", font=('Arial', 18), bg='Green')
+        #sport = athlete.get_sport()
+        #sport_printer = tk.Label(view_athlete, text="Sport: ", font=('Arial', 18), bg='Green')
+        #sport_printer.grid(row=4, column=0,pady=20)
+        #sport_name = tk.Label(view_athlete, text=f"{sport}", font=('Arial', 18), bg='Green')
 
-    age = athlete.get_age()
-    sport_printer = tk.Label(view_athlete, text="Age: ", font=('Arial', 18), bg='Green')
-    sport_printer.grid(row=7, column=0, pady=20)
-    athlete_age = tk.Label(view_athlete, text=f"{age}", font=('Arial', 18), bg='Green')
-    athlete_age.grid(row=7, column=1, pady=20)
+        age = athlete.get_age()
+        sport_printer = tk.Label(view_athlete, text="Age: ", font=('Arial', 18), bg='Green')
+        sport_printer.grid(row=7, column=0, pady=20)
+        athlete_age = tk.Label(view_athlete, text=f"{age}", font=('Arial', 18), bg='Green')
+        athlete_age.grid(row=7, column=1, pady=20)
 
-    skill_level = athlete.get_skill_level()
-    skill_level_printer = tk.Label(view_athlete, text="Skill level: ", font=('Arial', 18), bg='Green')
-    skill_level_printer.grid(row=9, column=0, pady=20)
-    display_level = tk.Label(view_athlete, text=f"{skill_level}", font=('Arial', 18), bg='Green')
-    display_level.grid(row=9, column=1, pady=20)
+        skill_level = athlete.get_skill_level()
+        skill_level_printer = tk.Label(view_athlete, text="Skill level: ", font=('Arial', 18), bg='Green')
+        skill_level_printer.grid(row=9, column=0, pady=20)
+        display_level = tk.Label(view_athlete, text=f"{skill_level}", font=('Arial', 18), bg='Green')
+        display_level.grid(row=9, column=1, pady=20)
 
-    workouts_name = tk.Label(view_athlete, text="Workouts", font=('Arial', 18, 'bold'), bg='Green')
-    workouts_name.grid(row=15, column=0, pady=10)
+        workouts_name = tk.Label(view_athlete, text="Workouts", font=('Arial', 18, 'bold'), bg='Green')
+        workouts_name.grid(row=15, column=0, pady=10)
 
-    row_offset = 16
-    for i, workout_name in enumerate(athlete.get_workouts()):
-        for w in workouts:  # make sure 'workouts' is passed globally or added at top
-            if w.name == workout_name:
-                workout_display = tk.Label(view_athlete, text=str(w), font=('Arial', 12), bg='lightgreen', justify='left', anchor='w')
-                workout_display.grid(row=row_offset + i, column=0, columnspan=2, sticky='w', padx=10, pady=5)
-                break
-
-
-    return_home = tk.Button(view_athlete, text="Return to menu", width=30, height=1, command=open_main)
-    return_home.grid(padx=125,row=20)
+        row_offset = 16
+        for i, workout_name in enumerate(athlete.get_workouts()):
+            for w in workouts:  # make sure 'workouts' is passed globally or added at top
+                if w.name == workout_name:
+                    workout_display = tk.Label(view_athlete, text=str(w), font=('Arial', 12), bg='lightgreen', justify='left', anchor='w')
+                    workout_display.grid(row=row_offset + i, column=0, columnspan=2, sticky='w', padx=10, pady=5)
+                    break
 
 
-    view_athlete.deiconify()
+        return_home = tk.Button(view_athlete, text="Return to menu", width=30, height=1, command=open_main)
+        return_home.grid(padx=125,row=20)
 
 
-def rate_workout()->None:
-    difficulty_rating.geometry("450x225")
-    difficulty_rating.configure(bg="Red")
-    main_window.withdraw()
-    screen.withdraw()
-    create_profile.withdraw()
-    view_athlete.withdraw()
-    add_workout.withdraw()
-    welcome_message = tk.Label(difficulty_rating, text="Rate your last workout (Easy, Moderate, Hard): ", font=('Arial', 15), bg='Red')
-    welcome_message.grid(row=0, column=0, columnspan=200,rowspan=50, pady=20, padx=10)
-
-    input_rating = tk.Text(difficulty_rating, height=1, width=30, font=('Arial', 15))
-    input_rating.grid(pady=20, padx=40)
-
-    def add_difficulty():
-        input_message = input_rating.get("1.0", tk.END)
-        athlete.log_performance(input_message)
+        view_athlete.deiconify()
+    else:
         open_main()
 
 
-    create_button = tk.Button(difficulty_rating, height=1, width=30, text="Add Difficulty", font=('Arial', 15), command=add_difficulty)
-    create_button.grid(pady=20, padx=40)
+def rate_workout()->None:
+    if athlete != None:
+        difficulty_rating.geometry("450x225")
+        difficulty_rating.configure(bg="Red")
+        main_window.withdraw()
+        screen.withdraw()
+        create_profile.withdraw()
+        view_athlete.withdraw()
+        add_workout.withdraw()
+        welcome_message = tk.Label(difficulty_rating, text="Rate your last workout (Easy, Moderate, Hard): ", font=('Arial', 15), bg='Red')
+        welcome_message.grid(row=0, column=0, columnspan=200,rowspan=50, pady=20, padx=10)
 
-    difficulty_rating.deiconify()
+        input_rating = tk.Text(difficulty_rating, height=1, width=30, font=('Arial', 15))
+        input_rating.grid(pady=20, padx=40)
+
+        def add_difficulty():
+            input_message = input_rating.get("1.0", tk.END)
+            athlete.log_performance(input_message)
+            open_main()
+
+
+        create_button = tk.Button(difficulty_rating, height=1, width=30, text="Add Difficulty", font=('Arial', 15), command=add_difficulty)
+        create_button.grid(pady=20, padx=40)
+
+        difficulty_rating.deiconify()
+    else:
+        open_main()
 
 
 def open_Creator()->None:
@@ -288,8 +300,9 @@ def open_Creator()->None:
 
 
 def open_main()->None:
+    global athlete
     name_message = input_message.get("1.0", tk.END)
-    main_window.geometry("625x500")
+    main_window.geometry("625x575")
     main_window.configure(bg='Blue')
     screen.withdraw()
     create_profile.withdraw()
@@ -298,6 +311,14 @@ def open_main()->None:
     add_workout.withdraw()
     welcome_message = tk.Label(main_window, text=f"{name_message} Please select an action!", font=('Arial', 25), bg='Blue', fg='White')
     welcome_message.grid(pady=20, padx=125)
+    if athlete == None:
+        useable_message = "You must create an Athlete before you do anything else!"
+    else:
+        useable_message = "You may now select other actions on your athlete!"
+
+    user_message = tk.Label(main_window, text=f"", font=('Arial', 18), bg='Blue', fg='White')
+    user_message.config(text=useable_message)
+    user_message.grid()
 
     option_1 = tk.Button(main_window, height=1, width=30, text="Create an Athlete Profile", font=('Arial', 15), command=open_Creator)
     option_1.grid(pady=20, padx=125)
