@@ -111,7 +111,7 @@ def save_athletes(athletes, filename="athletes.json"):
     :param athletes: (list[Athlete]) A list of all the created athletes.
     :param filename: (str) The path to the file that stores all the athletes.
     """
-    with open(filename, "w") as f:
+    with open(filename, "a") as f:
         print(athlete_saver)
         json.dump([a.get_all() for a in athlete_saver], f, indent=4)
 
@@ -271,15 +271,15 @@ def display_athlete()->None:
         workouts_name.grid(row=15, column=0, pady=10, padx=100)
 
         row_offset = 16
-        for i, workout_name in enumerate(athlete.get_workouts()):
-            workout_rating = athlete.get_performance()[i] if i < len(athlete.get_performance()) else "Not Rated"
-            for w in workouts:
-                if w.name == workout_name:
-                    workout_text = f"{str(w)}\nRating: {workout_rating.strip()}"  # <-- Add rating nicely under workout
-                    workout_display = tk.Label(view_athlete, text=workout_text, font=('Arial', 12), bg='Green',
+        print(athlete.get_workouts())
+        #for i, workout_name in enumerate(athlete.get_workouts()):
+        workout_rating = athlete.get_performance()[0] if 0 < len(athlete.get_performance()) else "Not Rated"
+            #for w in workouts:
+
+        workout_text = f"{str(athlete.get_workouts()[0])}\nRating: {workout_rating.strip()}"  # <-- Add rating nicely under workout
+        workout_display = tk.Label(view_athlete, text=workout_text, font=('Arial', 12), bg='Green',
                                            justify='left', anchor='e', fg='#FFFFFF')
-                workout_display.grid(row=15, column=1, pady=1)
-                break
+        workout_display.grid(row=15, column=1, pady=1)
 
 
 
