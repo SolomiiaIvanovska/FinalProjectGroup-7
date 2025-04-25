@@ -179,7 +179,7 @@ def add_preset_workout()->None:
             skill_level = skill if isinstance(skill, str) else skill_map.get(skill, "Beginner")
             exercises = PREDEFINED_WORKOUTS[category.strip()][skill_level]
 
-            workout = Workout(f"{category}Day", 1.0, 300, {ex.name: ex for ex in exercises}, category)
+            workout = Workout(f"{category} Day: ", 1.0, 300, {ex.name: ex for ex in exercises}, category)
             workouts.append(workout)
             printed_workouts = tk.Label(add_workout, text=f"{workout}", font=('Arial', 18),bg='#CD7F32')
             printed_workouts.grid()
@@ -252,7 +252,7 @@ def display_athlete()->None:
 
 
         return_home = tk.Button(view_athlete, text="Return to menu", width=30, height=1, command=open_main)
-        return_home.grid(column=0,row=20)
+        return_home.grid(column=1,row=20)
 
 
         view_athlete.deiconify()
