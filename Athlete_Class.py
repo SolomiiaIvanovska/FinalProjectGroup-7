@@ -3,13 +3,17 @@
 
 class Athlete:
     def __init__(self, input_tuple):
-        self.name = input_tuple[0]
 
-        self.age = input_tuple[1]
-        self.skill_level = input_tuple[2]
-        self.workouts = input_tuple[3].split(" ") if isinstance(input_tuple[3], str) else input_tuple[3]
-        self.performance = input_tuple[4].split(" ") if isinstance(input_tuple[4], str) else input_tuple[4]
-        self.goals = input_tuple[5]
+        default_values = ("No Name", 0, "Beginner", [], [], "No Goals")
+
+        self.name = input_tuple[0] if len(input_tuple) >= 1 else default_values[0]
+        self.age = input_tuple[1] if len(input_tuple) >= 2 else default_values[1]
+        self.skill_level = input_tuple[2] if len(input_tuple) >= 3 else default_values[2]
+
+        self.workouts = input_tuple[3].split(" ") if isinstance(input_tuple[3], str) else input_tuple[3] if len(input_tuple) >= 4 else default_values[3]
+        self.performance = input_tuple[4].split(" ") if isinstance(input_tuple[4], str) else input_tuple[4] if len(input_tuple) >= 5 else default_values[4]
+
+        self.goals = input_tuple[5] if len(input_tuple) >= 6 else default_values[5]
 
     def get_name(self):
         return self.name
