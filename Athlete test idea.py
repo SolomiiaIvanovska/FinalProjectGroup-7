@@ -398,7 +398,6 @@ def open_Creator()->None:
         try:
             athlete = Athlete((name_message.strip(), int(age_message), skill_message.strip(), [], [], goal_message.strip()))
             athlete_saver.append(athlete)
-            save_athletes(athlete)
             open_main()
             print(athlete.get_all())
         except IndexError:
@@ -411,6 +410,12 @@ def open_Creator()->None:
 
 
     create_profile.deiconify()
+    
+    
+def save_and_close()->None:
+    #function closes the app and saves the athelte to the json file for future use
+    save_athletes(athlete)
+    main_window.destroy()
 
 
 def open_main()->None:
@@ -452,7 +457,7 @@ def open_main()->None:
     option_6 = tk.Button(main_window, height=1, width=30, text="Load previous Athlete", font=('Arial', 15), command=load_previous_athlete)
     option_6.grid(pady=20,padx=125)
 
-    option_5 = tk.Button(main_window, height=1, width=30, text="Exit program", font=('Arial', 15), command=main_window.destroy)
+    option_5 = tk.Button(main_window, height=1, width=30, text="Exit program", font=('Arial', 15), command=save_and_close)
     option_5.grid(pady=20, padx=125)
 
     main_window.deiconify()
