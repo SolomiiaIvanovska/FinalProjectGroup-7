@@ -1,3 +1,4 @@
+
 import tkinter as tk
 from tkinter import OptionMenu, StringVar
 
@@ -182,11 +183,15 @@ def display_athlete()->None:
 
         row_offset = 16
         for i, workout_name in enumerate(athlete.get_workouts()):
-            for w in workouts:  # make sure 'workouts' is passed globally or added at top
+            workout_rating = athlete.get_performance()[i] if i < len(athlete.get_performance()) else "Not Rated"
+            for w in workouts:
                 if w.name == workout_name:
-                    workout_display = tk.Label(view_athlete, text=str(w), font=('Arial', 12), bg='lightgreen', justify='left', anchor='w')
-                    workout_display.grid(row=row_offset + i, column=0, columnspan=2, sticky='w', padx=10, pady=5)
-                    break
+                    workout_text = f"{str(w)}\nRating: {workout_rating.strip()}"  # <-- Add rating nicely under workout
+                    workout_display = tk.Label(view_athlete, text=workout_text, font=('Arial', 12), bg='lightgreen',
+                                           justify='left', anchor='w')
+                workout_display.grid(row=row_offset + i, column=0, columnspan=2, sticky='w', padx=10, pady=5)
+                break
+
 
 
         return_home = tk.Button(view_athlete, text="Return to menu", width=30, height=1, command=open_main)
