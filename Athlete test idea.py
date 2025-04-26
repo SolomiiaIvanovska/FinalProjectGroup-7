@@ -299,16 +299,17 @@ def display_athlete() -> None:
         workouts_name.grid(row=15, column=0, pady=10, padx=100)
 
         row_offset = 16
-        for i, workout_name in enumerate(athlete.get_workouts()):
-            print(workout_name)
-            workout_rating = athlete.get_performance()[i] if i < len(athlete.get_performance()) else "Not Rated"
-        for w in workouts:
-            if w.name == workout_name:
-                workout_text = f"{str(w)}\nRating: {workout_rating.strip()}"  # <-- Add rating nicely under workout
-                workout_display = tk.Label(view_athlete, text=workout_text, font=('Arial', 12), bg='Green',
-                                               justify='left', anchor='e', fg='#FFFFFF')
-                workout_display.grid(row=15, column=1, pady=1)
-                break
+        if athlete.get_workouts != []:
+            for i, workout_name in enumerate(athlete.get_workouts()):
+                print(workout_name)
+                workout_rating = athlete.get_performance()[i] if i < len(athlete.get_performance()) else "Not Rated"
+            for w in workouts:
+                if w.name == workout_name:
+                    workout_text = f"{str(w)}\nRating: {workout_rating.strip()}"  # <-- Add rating nicely under workout
+                    workout_display = tk.Label(view_athlete, text=workout_text, font=('Arial', 12), bg='Green',
+                                                   justify='left', anchor='e', fg='#FFFFFF')
+                    workout_display.grid(row=15, column=1, pady=1)
+                    break
 
         return_home = tk.Button(view_athlete, text="Return to menu", width=30, height=1, command=open_main)
         return_home.grid(column=1, row=20)
@@ -323,7 +324,7 @@ def rate_workout() -> None:
     Prompts the user with a dropdown to select the difficulty for their workout. Enter button adds that workout difficulty to the athlete's profile and sends back
     to the main screen.
     """
-    if athlete != None:
+    if athlete != None and len(athlete.get_performance()) < len(athlete.get_workouts()):
         difficulty_rating.geometry("450x225")
         difficulty_rating.configure(bg="Red")
         main_window.withdraw()
