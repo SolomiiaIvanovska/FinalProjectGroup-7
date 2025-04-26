@@ -230,6 +230,7 @@ def add_preset_workout() -> None:
             Loops through pre-made workout dictionary to find proper workout based on athlete skill and desired muscle group.
             """
             category = workouts_variable.get()
+            print(category)
             skill = athlete.get_skill_level()
             skill_map = {1: "Beginner", 2: "Intermediate", 3: "Advanced"}
             skill_level = skill if isinstance(skill, str) else skill_map.get(skill, "Beginner")
@@ -301,12 +302,12 @@ def display_athlete() -> None:
         for i, workout_name in enumerate(athlete.get_workouts()):
             print(workout_name)
             workout_rating = athlete.get_performance()[i] if i < len(athlete.get_performance()) else "Not Rated"
-            for w in workouts:
-                if w.name == workout_name:
-                    workout_text = f"{str(w)}\nRating: {workout_rating.strip()}"  # <-- Add rating nicely under workout
-                    workout_display = tk.Label(view_athlete, text=workout_text, font=('Arial', 12), bg='Green',
+        for w in workouts:
+            if w.name == workout_name:
+                workout_text = f"{str(w)}\nRating: {workout_rating.strip()}"  # <-- Add rating nicely under workout
+                workout_display = tk.Label(view_athlete, text=workout_text, font=('Arial', 12), bg='Green',
                                                justify='left', anchor='e', fg='#FFFFFF')
-                    workout_display.grid(row=15, column=1, pady=1)
+                workout_display.grid(row=15, column=1, pady=1)
                 break
 
         return_home = tk.Button(view_athlete, text="Return to menu", width=30, height=1, command=open_main)
