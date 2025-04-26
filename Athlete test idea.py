@@ -110,9 +110,18 @@ def save_athletes(athletes, filename="athletes.json"):
     :param athletes: (list[Athlete]) A list of all the created athletes.
     :param filename: (str) The path to the file that stores all the athletes.
     """
+    try:
+        with open(filename, "r") as f: #take al
+            print(athlete_saver)
+            previous_athletes = json.load(f)
+    except JSONDecodeError:
+        previous_athletes = []
+
+    previous_athletes.extend([a.get_all() for a in athlete_saver])
+
     with open(filename, "w") as f:
-        print(athlete_saver)
-        json.dump([a.get_all() for a in athlete_saver], f, indent=4)
+        json.dump(previous_athletes,f, indent=4)
+
 
 
 def load_athletes(filename="athletes.json"):
